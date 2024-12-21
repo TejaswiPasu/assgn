@@ -1,0 +1,211 @@
+1.def calculate_total(cart_items):
+       if not cart_items:
+        return 0  # Return 0 if the cart is empty
+
+    total_price = sum(cart_items.values())
+
+    # Apply 10% discount if more than 5 items
+    if len(cart_items) > 5:
+        total_price *= 0.9
+
+    return total_price
+
+# Example usage
+cart_items = {
+    'Laptop': 50000,
+    'Headphones': 2000,
+    'Mouse': 500,
+    'Keyboard': 1500
+}
+
+# Calculate total price
+total_price = calculate_total(cart_items)
+
+# Display the total price
+if total_price == 0:
+    print("Your cart is empty.")
+else:
+    print(f"Total Price: {total_price:.2f}")
+============================================================================================================================================
+2.def add_menu_item(menu, item):
+    
+    if item not in menu:
+        menu.append(item)
+        print(f"'{item}' added to the menu.")
+    else:
+        print(f"'{item}' is already on the menu.")
+
+def remove_menu_item(menu, item):
+   
+    if item in menu:
+        menu.remove(item)
+        print(f"'{item}' removed from the menu.")
+    else:
+        print(f"'{item}' is not on the menu, so it cannot be removed.")
+
+def check_menu_item(menu, item):
+    
+    if item in menu:
+        return f"{item} is available."
+    else:
+        return f"{item} is not available."
+
+initial_menu = ["Pizza", "Burger", "Pasta", "Salad"]
+
+add_item = "Tacos"
+remove_item = "Salad"
+check_item = "Pizza"
+
+
+add_menu_item(initial_menu, add_item)
+remove_menu_item(initial_menu, remove_item)
+availability = check_menu_item(initial_menu, check_item)
+
+
+print("Updated menu:", initial_menu)
+print("Availability:", availability)
+===================================================================================================================================
+3.class Student:
+    def __init__(self, name, marks):
+        self.name = name
+        self.marks = marks
+
+    def calculate_average(self):
+               return sum(self.marks) / len(self.marks)
+
+def calculate_average_marks(students):
+        averages = {}
+    for name, marks in students.items():
+        averages[name] = sum(marks) / len(marks)
+    return averages
+
+def find_top_performer(averages):
+    return max(averages, key=averages.get)
+
+
+students = {
+    "John": [85, 78, 92],
+    "Alice": [88, 79, 95],
+    "Bob": [70, 75, 80]
+}
+
+
+average_marks = calculate_average_marks(students)
+
+
+top_performer = find_top_performer(average_marks)
+
+
+print("Average Marks:", {name: round(avg, 2) for name, avg in average_marks.items()})
+print("Top Performer:", top_performer)
+=====================================================================================================================================================================
+4.def book_seat(total_seats, booked_seats, seat_to_book):
+   
+    if seat_to_book < 1 or seat_to_book > total_seats:
+        print(f"Seat {seat_to_book} is out of range.")
+    elif seat_to_book in booked_seats:
+        print(f"Seat {seat_to_book} is already booked.")
+    else:
+        booked_seats.append(seat_to_book)
+        print(f"Seat {seat_to_book} has been successfully booked.")
+
+def cancel_seat(booked_seats, seat_to_cancel):
+    
+    if seat_to_cancel in booked_seats:
+        booked_seats.remove(seat_to_cancel)
+        print(f"Seat {seat_to_cancel} has been successfully canceled.")
+    else:
+        print(f"Seat {seat_to_cancel} is not currently booked, so it cannot be canceled.")
+
+def get_available_seats(total_seats, booked_seats):
+    """Returns a list of available seats."""
+    return [seat for seat in range(1, total_seats + 1) if seat not in booked_seats]
+
+total_seats = 10
+booked_seats = [2, 5, 7]
+book_seat_input = 3
+cancel_seat_input = 5
+
+
+book_seat(total_seats, booked_seats, book_seat_input)
+cancel_seat(booked_seats, cancel_seat_input)
+
+
+available_seats = get_available_seats(total_seats, booked_seats)
+
+
+print("Available seats:", available_seats)
+===============================================================================================================================================================
+
+5.class Patient:
+    def __init__(self, name, age, disease):
+        self.name = name
+        self.age = age
+        self.disease = disease
+
+    def to_dict(self):
+       
+        return {"Name": self.name, "Age": self.age, "Disease": self.disease}
+
+def search_patients_by_disease(patients, disease):
+    
+    return [patient["Name"] for patient in patients if patient["Disease"].lower() == disease.lower()]
+
+
+patients = [
+    {"Name": "Alice", "Age": 30, "Disease": "Flu"},
+    {"Name": "Bob", "Age": 45, "Disease": "Diabetes"},
+    {"Name": "Charlie", "Age": 35, "Disease": "Flu"}
+]
+
+search_disease = "Flu"
+
+
+patients_with_disease = search_patients_by_disease(patients, search_disease)
+
+print(f"Patients with {search_disease}: {patients_with_disease}")
+=================================================================================================================================================================
+6.def calculate_positive_feedback_percentage(ratings):
+    
+    if not ratings:
+        return 0.0  # Handle case where no ratings are available
+
+    positive_feedback_count = sum(1 for rating in ratings if rating >= 4)
+    total_ratings = len(ratings)
+
+    return (positive_feedback_count / total_ratings) * 100
+
+
+ratings = [5, 4, 3, 5, 2, 4, 1, 5]
+
+
+positive_feedback_percentage = calculate_positive_feedback_percentage(ratings)
+
+
+print(f"Positive Feedback: {positive_feedback_percentage:.1f}%")
+
+========================================================================================================================================================================
+7.def calculate_fare(distance):
+    """Calculates the fare for a single trip based on distance."""
+    base_fare = 50
+    distance_fare = 10 * distance
+    return base_fare + distance_fare
+
+def calculate_total_fare(trips):
+    """Calculates the total fare for multiple trips."""
+    return sum(calculate_fare(distance) for distance in trips)
+
+# Input data
+trips = [5, 10, 3]  # Distances in km
+
+# Calculate fares for each trip and total fare
+total_fare = 0
+for i, trip_distance in enumerate(trips, start=1):
+    fare = calculate_fare(trip_distance)
+    total_fare += fare
+    print(f"Trip {i}: ${fare}")
+
+print(f"Total Fare: ${total_fare}")
+ 
+===========================================================================================================================================================================
+
