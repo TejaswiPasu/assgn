@@ -1,0 +1,198 @@
+CREATE TABLE orders (
+    ->          onum    INT  NOT NULL,
+    ->     amt  DECIMAL(7,2)  NOT NULL,
+    ->          odate  Date   NOT NULL,
+    ->  cnum  int  NOT NULL,
+    ->          PRIMARY KEY  (onum),
+    ->      FOREIGN KEY (cnum) REFERENCES customer(cnum)
+    ->        );
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> INSERT INTO orders VALUES (3001, 18.69, '1996-03-10', 2008);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO orders VALUES (3003, 767.19, '1996-10-03', 2001);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO orders VALUES (3002, 1900.10, '1996-10-03', 2007);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO orders VALUES (3005, 5160.45, '1996-10-03', 2003);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO orders VALUES (3006, 1098.16, '1996-10-03', 2008);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO orders VALUES (3009, 1713.23, '1996-10-04', 2002);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO orders VALUES (3007, 75.75, '1996-10-04', 2002);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO orders VALUES (3008, 4723.00, '1996-10-05', 2006);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO orders VALUES (3010, 1309.95, '1996-10-06', 2004);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO orders VALUES (3011, 9891.88, '1996-10-06', 2006);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select *from orders;
++------+---------+------------+------+
+| onum | amt     | odate      | cnum |
++------+---------+------------+------+
+| 3001 |   18.69 | 1996-03-10 | 2008 |
+| 3002 | 1900.10 | 1996-10-03 | 2007 |
+| 3003 |  767.19 | 1996-10-03 | 2001 |
+| 3005 | 5160.45 | 1996-10-03 | 2003 |
+| 3006 | 1098.16 | 1996-10-03 | 2008 |
+| 3007 |   75.75 | 1996-10-04 | 2002 |
+| 3008 | 4723.00 | 1996-10-05 | 2006 |
+| 3009 | 1713.23 | 1996-10-04 | 2002 |
+| 3010 | 1309.95 | 1996-10-06 | 2004 |
+| 3011 | 9891.88 | 1996-10-06 | 2006 |
++------+---------+------------+------+
+10 rows in set (0.00 sec)
+ 2.SELECT snum, COUNT(DISTINCT cnum) AS customer_count
+    -> FROM customer
+    -> GROUP BY snum order by customer_count desc;
++------+----------------+
+| snum | customer_count |
++------+----------------+
+| 1001 |              2 |
+| 1002 |              2 |
+| 1003 |              1 |
+| 1004 |              1 |
+| 1007 |              1 |
++------+----------------+
+5 rows in set (0.00 sec)
+3.mysql> SELECT customer.cname, COUNT(orders.onum) AS order_count
+    -> FROM customer
+    -> LEFT JOIN orders ON customer.cnum = orders.cnum
+    -> GROUP BY customer.cname
+    -> ORDER BY order_count DESC;
++----------+-------------+
+| cname    | order_count |
++----------+-------------+
+| clemmen  |           2 |
+| cis      |           2 |
+| giv      |           2 |
+| per      |           1 |
+| hoffmann |           1 |
+| liu      |           1 |
+| grass    |           1 |
++----------+-------------+
+7 rows in set (0.00 sec)
+4.mysql> SELECT s.snum, AVG(o.amt) AS avg_amount, c.cnum
+    -> FROM sales s
+    -> JOIN customer c ON s.snum = c.snum
+    -> JOIN orders o ON o.cnum = c.cnum  GROUP BY s.snum, c.cnum;
++------+-------------+------+
+| snum | avg_amount  | cnum |
++------+-------------+------+
+| 1001 |  767.190000 | 2001 |
+| 1001 | 7307.440000 | 2006 |
+| 1002 | 5160.450000 | 2003 |
+| 1002 | 1309.950000 | 2004 |
+| 1003 |  894.490000 | 2002 |
+| 1004 | 1900.100000 | 2007 |
+| 1007 |  558.425000 | 2008 |
++------+-------------+------+
+7 rows in set (0.00 sec)
+
+5.mysql> select c.cname,sum(o.amt) as total from customer c left join orders o on c.cnum=o.cnum order by total desc;
++----------+----------+
+| cname    | total    |
++----------+----------+
+| hoffmann | 26658.40 |
++----------+----------+
+1 row in set (0.00 sec)
+5.mysql> select c.cname,sum(o.amt) as total from customer c left join orders o on c.cnum=o.cnum group by o.cnum,c.cnum order by total desc;
++----------+----------+
+| cname    | total    |
++----------+----------+
+| clemmen  | 14614.88 |
+| liu      |  5160.45 |
+| per      |  1900.10 |
+| giv      |  1788.98 |
+| grass    |  1309.95 |
+| cis      |  1116.85 |
+| hoffmann |   767.19 |
++----------+----------+
+7 rows in set (0.00 sec)
+6.mysql> SELECT s.city, SUM(o.amt) AS total
+    -> FROM sales s
+    -> LEFT JOIN customer c ON s.city = c.city
+    -> LEFT JOIN orders o ON c.cnum = o.cnum
+    -> GROUP BY s.city
+    -> ORDER BY total DESC
+    -> LIMIT 1;
++--------+----------+
+| city   | total    |
++--------+----------+
+| london | 46146.21 |
++--------+----------+
+1 row in set (0.00 sec)
+
+7.mysql> SELECT s.sname, AVG(c.rate) AS avg_rate
+    -> FROM sales s
+    -> JOIN customer c ON s.snum = c.cnum
+    -> GROUP BY s.snum, s.sname
+    -> ORDER BY avg_rate DESC
+    -> LIMIT 1;
+Empty set (0.00 sec)
+10.mysql> SELECT c.cname, c.cnum
+    -> FROM customer c
+    -> LEFT JOIN orders o ON c.cnum = o.cnum
+    -> WHERE o.cnum IS NULL;
+Empty set (0.00 sec)
+
+1.mysql> select s.sname,avg(o.amt) as total from sales s left join customer c on c.snum=s.snum left join orders o on c.cnum=o.cnum group by s.sname order by total desc limit 1;
++-------+-------------+
+| sname | total       |
++-------+-------------+
+| peel  | 5127.356667 |
++-------+-------------+
+1 row in set (0.00 sec)
+8.mysql> SELECT
+        s.sname,
+        (COUNT(DISTINCT o.cnum) / COUNT(DISTINCT c.cnum)) * 100 AS percentage
+     FROM
+         sales s
+     JOIN
+        customer c ON s.snum = c.snum
+     LEFT JOIN
+      orders o ON c.cnum = o.cnum
+     GROUP BY
+        s.snum, s.sname;
++--------+------------+
+| sname  | percentage |
++--------+------------+
+| peel   |   100.0000 |
+| serres |   100.0000 |
+| axel   |   100.0000 |
+| motika |   100.0000 |
+| rif    |   100.0000 |
++--------+------------+
+5 rows in set (0.00 sec)
+11. SELECT
+         s.snum,
+             s.sname,
+             SUM(o.amt) AS total_sales,
+             (SUM(o.amt) / (SELECT SUM(amt) FROM Orders)) * 100 AS percentage_of_total_revenue
+          FROM Sales s
+     JOIN customer c on s.snum=c.snum
+         JOIN Orders o on o.cnum=c.cnum
+         GROUP BY s.snum
+         ORDER BY percentage_of_total_revenue DESC;
++------+--------+-------------+-----------------------------+
+| snum | sname  | total_sales | percentage_of_total_revenue |
++------+--------+-------------+-----------------------------+
+| 1001 | peel   |    15382.07 |                   57.700650 |
+| 1002 | serres |     6470.40 |                   24.271524 |
+| 1004 | motika |     1900.10 |                    7.127585 |
+| 1003 | axel   |     1788.98 |                    6.710755 |
+| 1007 | rif    |     1116.85 |                    4.189486 |
++------+--------+-------------+-----------------------------+
+5 rows in set (0.00 sec)
